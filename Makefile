@@ -1,31 +1,23 @@
-NAME = endgame
+CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
+INC = inc/{entity.h,entity_factory.h,entity_manager.h,hash_table.h,hash_table_test.h,resource_manager.h,sdl_util.h,sprite.h,string_util.h,tile_map.h,vec2.h,minilib.h,header.h,head.h}
+INCD = inc
+INCI = src/
+INCC = src/{entity.h,entity_factory.h,entity_manager.h,hash_table.h,hash_table_test.h,resource_manager.h,sdl_util.h,sprite.h,string_util.h,tile_map.h,vec2.h,minilib.h,header.h,head.h}
+SRC = src/{catgame.c,entity.c,entity_factory.c,entity_manager.c,hash_table.c,hash_table_test.c,resource_manager.c,sdl_util.c,sprite.c,string_util.c,tile_map.c,duo.c,endgame.c,solohardmode.c,solomode.c,simple.c,coingame.c,mx_strlen.c,sdlsnake.c}
+OUT = endgame
+IN = endgame_in
+SDL = -I framework/SDL2.framework/Headers -F framework -framework SDL2 -rpath framework -I framework/SDL2_image.framework/Headers -F framework -framework SDL2_image -rpath framework -I framework/SDL2_mixer.framework/Headers -F framework -framework SDL2_mixer -rpath framework -I framework/SDL2_ttf.framework/Headers -F framework -framework SDL2_ttf -rpath framework
 
-INC = inc/minilib.h
-	
-HDR = minilib.h
+all:
+	clang $(CFLAGS) $(SDL) -o $(OUT) $(SRC) -I $(INCD)
 
-SRC = src/main.c src/mx_strlen.c
-		
-SRCS = main.c mx_strlen.c
+install: all
+	cp -f $(OUT) $(IN)
 
-SDLF =  -I ./framework/SDL2.framework/Versions/A/Headers -F ./framework -framework SDL2 -rpath ./framework -I ./framework/SDL2_image.framework/Versions/A/Headers -F ./framework -framework SDL2_image -rpath ./framework 
-
-SDLM = -I ./framework/SDL2_mixer.framework/Versions/A/Headers -F ./framework -framework SDL2_mixer -rpath ./framework
-
-SDLT = -I ./framework/SDL2_ttf.framework/Versions/A/Headers -F ./framework -framework SDL2_ttf -rpath ./framework
-
-CFLAG = -std=c11 -Wall -Wextra -Werror -Wpedantic
-
-all: install clean
-install:
-	@cp $(SRC) .
-	@cp $(INC) .
-	@clang $(CFLAG) $(SDLM) $(SRCS) $(SDLF) $(SDLT) -o $(NAME) -I $(HDR) 
 uninstall:
-	@rm -rf $(SRCS)
-	@rm -rf $(HDR)
-	@rm -rf $(NAME)
+	rm -f $(IN)
+
 clean:
-	@rm -rf $(SRCS)
-	@rm -rf $(HDR)
-reinstall: uninstall all
+	rm -f $(OUT) $(INCC)
+
+reinstall: clean all uninstall install
